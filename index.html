@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" href="https://images.emojiterra.com/google/android-12l/512px/1f52b.png" type="image/x-icon">
+	<title>Shop</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		:root {
+			color-scheme: light dark;
+			--bg: light-dark(white, #121212);
+			--text: light-dark(black, snow);
+			--hg: orange;
+			--dark: rgb(156, 93, 15);
+		}
+
+		body {
+			font-family: Helvetica, sans-serif;
+			background-color: var(--bg);
+		}
+
+		header {
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			padding: 0 5px;
+			border-bottom: solid 1px var(--text);
+		}
+
+		nav{
+			display: flex;
+			justify-content: space-between;
+		}
+		header a:first-of-type {
+			border-radius: 0px;
+			border-top-left-radius: 15px;
+			border-bottom-left-radius: 15px;
+		}
+		header a:last-of-type {
+			border-radius: 0px;
+			border-top-right-radius: 15px;
+			border-bottom-right-radius: 15px;
+		}
+		header a {
+			all: unset;
+			display: block;
+			cursor: pointer;
+			color: var(--text);
+			background-color: var(--hg);
+			border: 1px solid var(--hg);
+			padding: 5px;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+
+		header a:not(:first-of-type):not(:last-of-type) {
+			border-left: solid 1px var(--bg);
+			border-right: solid 1px var(--bg);
+		}
+
+		header a:hover {
+			background-color: var(--bg);
+			color: var(--text);
+		}
+
+		#content {
+			padding-top: 15px;
+			display: flex;
+			justify-content: space-around;
+		}
+
+		#carrousel {
+			width: 45%;
+			aspect-ratio: 1/1;
+			overflow: hidden;
+			display: flex;
+			border-radius: 15px;
+			position: relative;
+		}
+		#carrousel img {
+			max-width: 100%;
+			aspect-ratio: 1/1;
+		}
+
+		#carrousel #navBars{
+			cursor: pointer;
+			position: absolute;
+			bottom: 0;
+			width: 100%;
+			height: 5%;
+			display: flex;
+			align-items: last baseline;
+			flex-wrap: nowrap;
+		}
+
+		#carrousel .bar {
+			flex-grow: 1;
+			height: 20%;
+			opacity: 0.5;
+			background-color: var(--hg);
+			transition: height 0.3s ease, background-color 0.3s ease;
+		}
+
+		#carrousel .bar:hover:not(#selected) {
+			height: 25%;
+			background-color: var(--dark);
+		}
+
+		#carrousel #selected {
+			height: 30%;
+			cursor: auto;
+			position: relative;
+			overflow-x: hidden;
+		}
+
+		#carrousel #selected::before{
+			content: '';
+			display: block;
+			width: 100%;
+			height: 100%;
+			background-color: var(--dark);
+			position: absolute;
+			left: -100%;
+			animation-duration: 5s;
+			animation-name: load;
+			animation-timing-function: linear;
+			animation-iteration-count: 1;
+			animation-direction: forwards;
+		}
+
+		@keyframes load{
+			from {
+				left: -100%;
+			}
+			to {
+				left: 0;
+			}
+		}
+
+		#carrousel #navControls {
+			width: 90%;
+			margin-left: 5%;
+			position: absolute;
+			height: 5%;
+			top: 45%;
+			display: flex;
+			justify-content: space-between;
+		}
+
+		#carrousel #navControls .control {
+			height: 100%;
+			aspect-ratio: 1/1;
+			border-top: 1dvw solid var(--hg);
+			opacity: 0.7;
+			transition: opacity 0.3s ease;
+			cursor: pointer;
+		}
+
+		#carrousel #navControls .control:hover {
+			opacity: 1;
+		}
+
+		#carrousel #navControls #left {
+			border-left: 1dvw solid var(--hg);
+			transform: rotate(-45deg);
+		}
+		
+		#carrousel #navControls #right {
+			border-right: 1dvw solid var(--hg);
+			transform: rotate(45deg);
+		}
+
+		#carrousel .top-right {
+			position: absolute;
+			top: 5px;
+			left: 5px;
+		}
+
+		#carrousel a {
+			all: unset;
+			padding: 5px;
+			color: var(--text);
+			background-color: var(--hg);
+			cursor: pointer;
+			border-radius: 10px;
+		}
+
+		#text-content {
+			max-width: 30%;
+			text-align: left;
+			padding: 5%;
+		}
+
+		#text-content h1 span{
+			margin-left: 3px;
+			font-weight: lighter;
+			font-size: large;
+			background-color: var(--hg);
+			border-radius: 15px;
+			padding: 5px;
+			position: absolute;
+			top: 5px;
+			right: 5px;
+		}
+
+		#text-content h1 {
+			font-size: 5dvw;
+			display: flex;
+			position: relative;
+			align-items:flex-start;
+		}
+
+		#text-content p {font-size: larger;}
+
+		#text-content button {
+			all: unset;
+			width: 90%;
+			font-size: large;
+			padding: 15px;
+			background-color: var(--hg);
+			border-radius: 100dvw;
+			font-weight: bolder;
+			text-align: center;
+			cursor: pointer;
+			margin: 15px 0;
+			border: 1px solid var(--hg);
+			transition: background-color 0.3s ease;
+		}
+
+		#text-content button:hover {
+			background-color: transparent;
+		}
+
+		#text-content #ratings {
+			border-top: 1px solid var(--text);
+		}
+
+		.rating {
+			width: 90%;
+			margin-left: 5%;
+			margin-bottom: 10px;
+			padding-bottom: 10px;
+			border-bottom: 1px solid var(--text);
+		}
+
+		.rating div img {
+			width: 15%;
+			aspect-ratio: 1/1;
+			object-fit: cover;
+			border-radius: 100%;
+		}
+
+		.rating div h2 {
+			display: inline-block;
+			font-size: 3dvw;
+			margin-left: 15px;
+		}
+
+		.rating div:first-of-type {
+			display: flex;
+			align-items: center;
+		}
+
+		.rating .stars {
+			width: 25%;
+			aspect-ratio: 50/7.5;
+			background-color: var(--hg);
+			mask-image: url('./imgs/joint.png');
+			mask-repeat: repeat;
+			mask-mode: alpha;
+			mask-size: 20%;
+			position: relative;
+		}
+
+		.rating .stars::after {
+			content: '';
+			display: block;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 0;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		.starcontainer {
+			display: flex;
+			align-items: center;
+		}
+
+		.rating .fourtwo::after {
+			right: -84%;
+		}
+
+		
+		.rating .fourtwenty::after {
+			right: -100%;
+		}
+
+		.rating .five::after {
+			right: -100%;
+		}
+		.rating .four::after {
+			right: -100%;
+		}
+		.rating .three::after {
+			right: -100%;
+		}
+
+		#imageView {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			justify-content: center;
+			position: fixed;
+			top: 0;
+			left: 0;
+			align-items: center;
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		#imageView img {
+			max-width: 90%;
+			max-height: 50%;
+		}
+
+		#imageView p {
+			position: fixed;
+			top: 5px;
+			right: 5px;
+			font-size: 3dvw;
+			cursor: pointer;
+			transition: color 0.3s ease;
+		}
+
+		#imageView p:hover {
+			color: red;
+		}
+
+		@media screen and (max-width: 1200px) {
+			header {
+				flex-direction: column;
+				padding-bottom: 5px;
+			}
+			#carrousel {
+				width: 90dvw;
+			}
+
+			#content {
+				flex-direction: column;
+				width: 100%;
+				align-items: center;
+			}
+
+			#text-content {
+				max-width: 90%;
+			}
+		}
+	</style>
+</head>
+<body>
+	<header><h1 id="title">A 1000</h1>
+	<nav><a href="">Home</a><a href="">Cart</a><a href="">Search</a></nav>
+	</header>
+	<div id="content">
+		<div id="carrousel">
+			<img src="./imgs/render1.png" alt="" srcset="">
+			<img src="./imgs/render2.png" alt="" srcset="">
+			<img src="./imgs/render3.png" alt="" srcset="">
+			<img src="./imgs/render4.png" alt="" srcset="">
+			<a href="./view.html" class="top-right">View</a>
+		</div>
+		<div id="text-content">
+			<h1>Un <br>Cumpleaños <br>A Mil<span>Sold Out</span></h1>
+			<p>Un hombre de alta calidad, con casa, el chupe no viene incluido, pero si es requerido. Hoy quiere jartarse bien rico, si no pasa pues, paila, pero la pasa bien bueno.
+				<br><br>Feliz Cumple Santi, <br>te habla tu hermano
+			</p>
+			<a href="./" download="toy.glb" style="all: unset;"><button>Comprar Ahora</button></a>
+			<div id="ratings">
+				<h1>Ratings</h1>
+				<br>
+				<div class="rating">
+					<div>
+					<img src="./imgs/pfp/lukassssss.jpg" alt="" srcset="">
+					<h2>Luktttttt</h2>
+					</div>
+					<div class="starcontainer">
+					<div class="stars fourtwo"></div>
+					<p>4.20/5</p></div>
+					<p>Me salió chimba el producto de momentardo lo abrí y ya estaba prinkiti trinkiti on that good kush and alcohol yo no sé de onde salió toda esa chimbada pero amanecí bien loco y así cada q lo pillaba en mi cuarto se repetía el ciclo compren esta vuelta es lo mejor que pueden hacer ahora soy CEO de central beer y tengo roblox bitches and robux</p>
+				</div>
+				
+				<div class="rating">
+					<div>
+					<img src="./imgs/pfp/tefi.jpg" alt="" srcset="">
+					<h2>Tefitofu</h2>
+					</div>
+					<div class="starcontainer">
+					<div class="stars fourtwo"></div>
+					<p>4.20/5</p></div>
+					<p>GRAN, GRAN, GRAN ADQUISICIÓN <br>
+						Justo el funko pop que no sabía que necesitaba. Toca música bien chévere si le pide que lo haga y a cambio solo tiene que darle chup y ramen pa que no haga berrinche. Me lo llevo de paseo a Sasaima y me prendo un Marlboro blanco con el. Me hace feliz every single day, pero ojito que si lo descuida termina tuiteando. Otra maravillosa cosa de este funko es que será su fotógrafo personal, regalándole las mejores fotos que ud pueda tener. En fin… no se arrepentirá jamás, le garantizo solo risas y cosas buenas. Cómase un helado de frutos rojos de creepes, métale a su vapo de preferencia y cómprelo ya, que como este funko no hay dos.</p>
+				</div>
+
+				<div class="rating">
+					<div>
+					<img src="./imgs/pfp/monte.jpg" alt="" srcset="">
+					<h2>Portavasosgay</h2>
+					</div>
+					<div class="starcontainer">
+					<div class="stars fourtwenty"></div>
+					<p>420/5</p></div>
+					<p>
+						Santiago merchán, un tipo totalmente insensato y maravilloso, como lo amo. realmente una persona con un corazón totalmente gigante en el cual caben palabras infinitas y cualquier descripción se torna insuficiente....tiene un humor astuto y efectivo, tiene un talento maravilloso para dar grandes conversaciones con reflexiones tenaces en cualquier momento, es un músico brillante del cual he aprendido mucho, pero sobretodo es un querido amigo que mantengo cerca a mi existencia gracias a lo que genera en mí. si santiago merchán no hubiese nacido hace ya (múchisimo) tiempo, mi vida sería mucho más miserable, no tendría con quien compartir tano tiempo, tanta energía....le doy 420 blunts por el brainrot al que me ha sucumbido y a la putrefacción que hemos tolerado en unx otrx....estaré a tu lado haciendo chistes maricas y funándote por tus controversias siempre...feliz cumpleaños...
+					</p>
+				</div>
+			</div>
+			<a href="https://chat.whatsapp.com/LN1sM6Sj6ARAMMEdquZzbS">No ves tu comentario? Quieres mandar uno?</a>
+		</div>
+	</div>
+	<script defer>
+		let ratings = document.getElementsByClassName("rating")
+		for (let i = 0; i < ratings.length; i++){
+			let cp = ratings[i].getElementsByTagName("img")[0];
+			cp.onclick = ()=>{
+				let container = document.createElement("div")
+				container.id = "imageView"
+				let exitContent = document.createElement("p")
+				exitContent.onclick = ()=>{document.body.removeChild(container)}
+				exitContent.innerText = "x"
+				let clone = cp.cloneNode(true)
+				container.appendChild(exitContent)
+				container.appendChild(clone)
+				document.body.appendChild(container)
+			}
+			
+		}
+		let carrousel = document.getElementById("carrousel");
+		function checkAspectRatio(){
+			document.getElementById("carrousel").style.height = ""
+			if (window.innerWidth < 1200) return
+			document.getElementById("carrousel").style.height = document.getElementById("carrousel").getBoundingClientRect().width + "px"
+		}
+		window.onresize = checkAspectRatio;
+		setTimeout(window.onresize, 500)
+		{
+			let left = document.createElement("div");
+			left.classList.add("control")
+			left.id = "left"
+			let right = document.createElement("div");
+			right.classList.add("control")
+			right.id = "right"
+			left.onclick = backImg;
+			right.onclick = newImg;
+			let controlNav = document.createElement("nav");
+			controlNav.appendChild(left);
+			controlNav.appendChild(right);
+			controlNav.id = "navControls"
+			carrousel.appendChild(controlNav);
+		}
+		let imgs = carrousel.getElementsByTagName("img");
+		let imgNav = document.createElement("nav")
+		imgNav.id = "navBars"
+		for (let i = 0; i < imgs.length; i++){
+			imgs[i].style.display = "none";
+			let bar = document.createElement("div")
+			bar.classList.add("bar")
+			bar.addEventListener("animationend", (ev)=>{
+				if(ev.animationName == "load") newImg();
+			})
+			bar.onclick = ()=>{
+				let bars = document.getElementsByClassName("bar");
+				for (let i = 0; i < bars.length; i++){
+					bars[i].id = ""
+					imgs[i].style.display = "none"
+					if (bars[i] == bar){
+						bars[i].id = "selected"
+						imgs[i].style.display = "block";
+					}
+				}
+			}
+			if (i == 0) {
+				bar.id = "selected";
+				imgs[i].style.display = "block";
+			}
+			imgNav.appendChild(bar)
+		}
+		carrousel.appendChild(imgNav);
+		function newImg(){
+			let bars = document.getElementsByClassName("bar");
+			for (let i = 0; i < bars.length; i++){
+				if(bars[i].id == "selected"){
+					bars[i].id = ""
+					imgs[i].style.display = "none";
+					bars[(i+1)%bars.length].id = "selected"
+					imgs[(i+1)%bars.length].style.display = "block";
+					break;
+				}
+			}
+		}
+
+		function backImg(){
+			let bars = document.getElementsByClassName("bar");
+			for (let i = 0; i < bars.length; i++){
+				if(bars[i].id == "selected"){
+					bars[i].id = ""
+					imgs[i].style.display = "none";
+					let newPos = i - 1 < 0 ? bars.length - 1 : i-1;
+					bars[newPos].id = "selected"
+					imgs[newPos].style.display = "block";
+					break;
+				}
+			}
+		}
+	</script>
+</body>
+</html>
